@@ -1,22 +1,28 @@
 package it.prova.gestioneimpiegatojdbc.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Compagnia {
 	private Long id;
 	private String ragioneSociale;
 	private int fatturatoAnnuo;
 	private Date dataFondazione;
+	private List<Impiegato> impiegati = new ArrayList<>();
 	
 	public Compagnia() {}
-	public Compagnia(Long id, String ragioneSociale, int fatturatoAnnuo, Date dataFondazione) {
+	public Compagnia(Long id, String ragioneSociale, int fatturatoAnnuo, Date dataFondazione,
+			List<Impiegato> impiegati) {
 		super();
 		this.id = id;
 		this.ragioneSociale = ragioneSociale;
 		this.fatturatoAnnuo = fatturatoAnnuo;
 		this.dataFondazione = dataFondazione;
+		this.impiegati = impiegati;
 	}
-	
+
+
 	public Long getId() {
 		return id;
 	}
@@ -41,10 +47,16 @@ public class Compagnia {
 	public void setDataFondazione(Date dataFondazione) {
 		this.dataFondazione = dataFondazione;
 	}
+	public List<Impiegato> getImpiegati() {
+		return impiegati;
+	}
+	public void setImpiegati(List<Impiegato> impiegati) {
+		this.impiegati = impiegati;
+	}
 	
 	@Override
 	public String toString() {
 		return "Compagnia [id=" + id + ", ragioneSociale=" + ragioneSociale + ", fatturatoAnnuo=" + fatturatoAnnuo
-				+ ", dataFondazione=" + dataFondazione + "]";
+				+ ", dataFondazione=" + dataFondazione + ", impiegati=" + impiegati + "]";
 	}
 }
