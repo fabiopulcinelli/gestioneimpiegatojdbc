@@ -12,10 +12,17 @@ public class Impiegato {
 	private Compagnia compagnia;
 	
 	public Impiegato() {}
-	public Impiegato(Long id, String nome, String cognome, String codiceFiscale, Date dataNascita, Date dataAssunzione,
+	public Impiegato(String nome, String cognome, String codiceFiscale, Date dataNascita, Date dataAssunzione) {
+		super();
+		this.nome = nome;
+		this.cognome = cognome;
+		this.codiceFiscale = codiceFiscale;
+		this.dataNascita = dataNascita;
+		this.dataAssunzione = dataAssunzione;
+	}
+	public Impiegato(String nome, String cognome, String codiceFiscale, Date dataNascita, Date dataAssunzione,
 			Compagnia compagnia) {
 		super();
-		this.id = id;
 		this.nome = nome;
 		this.cognome = cognome;
 		this.codiceFiscale = codiceFiscale;

@@ -35,6 +35,7 @@ public class ImpiegatoDAOImpl extends AbstractMySQLDAO implements ImpiegatoDAO {
 				impiegatoTemp.setCodiceFiscale(rs.getString("CODICEFISCALE"));
 				impiegatoTemp.setDataNascita(rs.getDate("DATANASCITA"));
 				impiegatoTemp.setDataAssunzione(rs.getDate("DATAASSUNZIONE"));
+				impiegatoTemp.setId(rs.getLong("ID"));
 
 				result.add(impiegatoTemp);
 			}
@@ -153,8 +154,49 @@ public class ImpiegatoDAOImpl extends AbstractMySQLDAO implements ImpiegatoDAO {
 
 	@Override
 	public List<Impiegato> findByExample(Impiegato input) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		if (isNotActive())
+			throw new Exception("Connessione non attiva. Impossibile effettuare operazioni DAO.");
+
+		ArrayList<Impiegato> result = new ArrayList<Impiegato>();
+		Impiegato ImpiegatoTemp = null;
+		String query = "SELECT * FROM impiegato WHERE ";
+		
+		if(input.getNome()!= null && !input.getNome().isBlank()) {
+			query += " nome LIKE '" + input.getNome() + "%' AND ";
+		}
+		if(input.getCognome()!= null && !input.getCognome().isBlank()) {
+			query += " cognome LIKE '" + input.getCognome() + "%' AND ";
+		}
+		if(input.getCodiceFiscale()!= null && !input.getCodiceFiscale().isBlank()) {
+			query += " codicefiscale LIKE '" + input.getCodiceFiscale() + "%' AND ";
+		}
+		if(input.getDataNascita()!= null) {
+			query += " datanascita > '" + new java.sql.Date(input.getDataNascita().getTime()) + "' AND ";
+		}
+		if(input.getDataAssunzione()!= null) {
+			query += " dataassunzione > '" + new java.sql.Date(input.getDataAssunzione().getTime()) + "' AND ";
+		}
+		query += " true=true;";
+		
+		try (Statement ps = connection.createStatement(); ResultSet rs = ps.executeQuery(query)) {
+
+			while (rs.next()) {
+				ImpiegatoTemp = new Impiegato();
+				ImpiegatoTemp.setNome(rs.getString("nome"));
+				ImpiegatoTemp.setCognome(rs.getString("cognome"));
+				ImpiegatoTemp.setCodiceFiscale(rs.getString("codicefiscale"));
+				ImpiegatoTemp.setDataNascita(rs.getDate("datanascita"));
+				ImpiegatoTemp.setDataAssunzione(rs.getDate("dataassunzione"));
+				ImpiegatoTemp.setId(rs.getLong("ID"));
+				result.add(ImpiegatoTemp);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		
+		return result;
 	}
 
 	@Override

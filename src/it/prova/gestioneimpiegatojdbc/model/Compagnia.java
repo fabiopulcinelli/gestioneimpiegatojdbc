@@ -12,10 +12,15 @@ public class Compagnia {
 	private List<Impiegato> impiegati = new ArrayList<>();
 	
 	public Compagnia() {}
-	public Compagnia(Long id, String ragioneSociale, int fatturatoAnnuo, Date dataFondazione,
+	public Compagnia(String ragioneSociale, int fatturatoAnnuo, Date dataFondazione) {
+		super();
+		this.ragioneSociale = ragioneSociale;
+		this.fatturatoAnnuo = fatturatoAnnuo;
+		this.dataFondazione = dataFondazione;
+	}
+	public Compagnia(String ragioneSociale, int fatturatoAnnuo, Date dataFondazione,
 			List<Impiegato> impiegati) {
 		super();
-		this.id = id;
 		this.ragioneSociale = ragioneSociale;
 		this.fatturatoAnnuo = fatturatoAnnuo;
 		this.dataFondazione = dataFondazione;
