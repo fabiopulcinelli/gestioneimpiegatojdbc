@@ -38,6 +38,9 @@ public class TestGestioneImpiegato {
 			testFindByExampleCompagnia(compagniaDAOInstance);
 			System.out.println("In tabella Compagnia ci sono " + compagniaDAOInstance.list().size() + " elementi.");
 			
+			testFindAllByDataAssunzioneMaggioreDi(compagniaDAOInstance);
+			System.out.println("In tabella Compagnia ci sono " + compagniaDAOInstance.list().size() + " elementi.");
+			
 			testFindAllByRagioneSocialeContiene(compagniaDAOInstance);
 			System.out.println("In tabella Compagnia ci sono " + compagniaDAOInstance.list().size() + " elementi.");
 			
@@ -51,6 +54,15 @@ public class TestGestioneImpiegato {
 			System.out.println("In tabella Compagnia ci sono " + compagniaDAOInstance.list().size() + " elementi.");
 			
 			testFindByExampleImpiegato(impiegatoDAOInstance);
+			System.out.println("In tabella Impiegato ci sono " + compagniaDAOInstance.list().size() + " elementi.");
+			
+			testFindAllByCompagnia(impiegatoDAOInstance, compagniaDAOInstance);
+			System.out.println("In tabella Impiegato ci sono " + compagniaDAOInstance.list().size() + " elementi.");
+			
+			testCountByDataFondazioneCompagniaGreaterThan(impiegatoDAOInstance);
+			System.out.println("In tabella Impiegato ci sono " + compagniaDAOInstance.list().size() + " elementi.");
+			
+			testFindAllErroriAssunzione(impiegatoDAOInstance);
 			System.out.println("In tabella Impiegato ci sono " + compagniaDAOInstance.list().size() + " elementi.");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -100,6 +112,21 @@ public class TestGestioneImpiegato {
 			System.out.println(userItem.toString());
 		}
 		System.out.println(".......testFindByExampleCompagnia fine: PASSED.............");
+	}
+	
+	private static void testFindAllByDataAssunzioneMaggioreDi(CompagniaDAO compagniaDAOInstance) throws Exception {
+		System.out.println(".......testFindAllByDataAssunzioneMaggioreDi inizio.............");
+		List<Compagnia> elencoVociPresenti = compagniaDAOInstance.list();
+		if (elencoVociPresenti.size() < 1)
+			throw new RuntimeException("testFindAllByDataAssunzioneMaggioreDi : FAILED, non ci sono voci sul DB");
+
+		// ora provo ad estrarli e devono avere tutti data successiva a quella scelta
+		Date dataCreazione = new SimpleDateFormat("dd-MM-yyyy").parse("03-01-2022");
+		List<Compagnia> elencoRagione = compagniaDAOInstance.findAllByDataAssunzioneMaggioreDi(dataCreazione);
+		for (Compagnia userItem : elencoRagione) {
+			System.out.println(userItem.toString());
+		}
+		System.out.println(".......testFindAllByDataAssunzioneMaggioreDi fine: PASSED.............");
 	}
 	
 	private static void testFindAllByRagioneSocialeContiene(CompagniaDAO compagniaDAOInstance) throws Exception {
@@ -162,5 +189,45 @@ public class TestGestioneImpiegato {
 			System.out.println(userItem.toString());
 		}
 		System.out.println(".......testFindByExampleImpiegato fine: PASSED.............");
+	}
+	
+	private static void testFindAllByCompagnia(ImpiegatoDAO impiegatoDAOInstance, CompagniaDAO compagniaDAOInstance) throws Exception {
+		System.out.println(".......testFindAllByCompagnia inizio.............");
+		List<Impiegato> elencoVociPresenti = impiegatoDAOInstance.list();
+		if (elencoVociPresenti.size() < 1)
+			throw new RuntimeException("testFindAllByCompagnia : FAILED, non ci sono voci sul DB");
+
+		// ora provo ad estrarli e devono avere tutti data successiva a quella scelta
+		List<Compagnia> elencoCompagnia = compagniaDAOInstance.list();
+		Compagnia primoDellaLista = elencoCompagnia.get(0);
+		List<Impiegato> elencoImpiegato = impiegatoDAOInstance.findAllByCompagnia(primoDellaLista);
+		for (Impiegato userItem : elencoImpiegato) {
+			System.out.println(userItem.toString());
+		}
+		System.out.println(".......testFindAllByCompagnia fine: PASSED.............");
+	}
+	
+	private static void testCountByDataFondazioneCompagniaGreaterThan(ImpiegatoDAO impiegatoDAOInstance) throws Exception {
+		System.out.println(".......testCountByDataFondazioneCompagniaGreaterThan inizio.............");
+		List<Impiegato> elencoVociPresenti = impiegatoDAOInstance.list();
+		if (elencoVociPresenti.size() < 1)
+			throw new RuntimeException("testCountByDataFondazioneCompagniaGreaterThan : FAILED, non ci sono voci sul DB");
+
+		// ora provo ad estrarli e devono avere tutti data successiva a quella scelta
+		Date dataCreazione = new SimpleDateFormat("dd-MM-yyyy").parse("03-01-2022");
+		int risultato = impiegatoDAOInstance.countByDataFondazioneCompagniaGreaterThan(dataCreazione);
+		
+		System.out.println("Numero di impiegati di Compagnia con data di fondazione maggiore di: " + risultato);
+		System.out.println(".......testCountByDataFondazioneCompagniaGreaterThan fine: PASSED.............");
+	}
+	
+	private static void testFindAllErroriAssunzione(ImpiegatoDAO impiegatoDAOInstance) throws Exception  {
+		System.out.println(".......testFindAllErroriAssunzione inizio.............");
+
+		List<Impiegato> elencoExample = impiegatoDAOInstance.findAllErroriAssunzione();
+		for (Impiegato userItem : elencoExample) {
+			System.out.println(userItem.toString());
+		}
+		System.out.println(".......testFindAllErroriAssunzione fine: PASSED.............");
 	}
 }

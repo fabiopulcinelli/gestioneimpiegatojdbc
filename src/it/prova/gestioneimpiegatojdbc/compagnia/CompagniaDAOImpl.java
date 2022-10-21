@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -184,8 +185,36 @@ public class CompagniaDAOImpl extends AbstractMySQLDAO implements CompagniaDAO {
 
 	@Override
 	public List<Compagnia> findAllByDataAssunzioneMaggioreDi(Date dataAssunzione) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		if (isNotActive())
+			throw new Exception("Connessione non attiva. Impossibile effettuare operazioni DAO.");
+
+		ArrayList<Compagnia> result = new ArrayList<Compagnia>();
+		Compagnia CompagniaTemp = null;
+		
+		try (PreparedStatement ps = connection.prepareStatement("SELECT c.* FROM compagnia c "
+				+ "INNER JOIN impiegato i ON c.id = i.compagnia_id "
+				+ "WHERE dataassunzione > ?;")) {
+
+			ps.setDate(1, new java.sql.Date(dataAssunzione.getTime()));
+			
+			try (ResultSet rs = ps.executeQuery();) {
+				while (rs.next()) {
+					CompagniaTemp = new Compagnia();
+					CompagniaTemp.setRagioneSociale(rs.getString("ragionesociale"));
+					CompagniaTemp.setFatturatoAnnuo(rs.getInt("fatturatoannuo"));
+					CompagniaTemp.setDataFondazione(rs.getDate("datafondazione"));
+					CompagniaTemp.setId(rs.getLong("ID"));
+	
+					result.add(CompagniaTemp);
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		
+		return result;
 	}
 
 	@Override
